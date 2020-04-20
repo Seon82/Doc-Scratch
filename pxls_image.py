@@ -43,7 +43,7 @@ async def get_difference(canvas, url):
     template_img, num_transparent = resize(template_img, template_info["width"])
     canvas_section = canvas[template_info["y"]:template_info["y"]+template_img.shape[0], template_info["x"]:template_info["x"]+template_img.shape[1]]
     num_same = np.count_nonzero(np.apply_along_axis(np.all, 2, (canvas_section==template_img)))
-    size = canvas_section.shape[0]*canvas_section.shape[1]-num_transparent
+    size = canvas_section.shape[0]*canvas_section.shape[1]-num_transparent - 1 #wtf
     return num_same, size
 
 def show(img):
@@ -55,7 +55,7 @@ def resize(img, new_width):
     transparent_num = 0
     height, width = img.shape[:2]
     new_height = height*new_width//width
-    new_image = np.ones((new_height, new_width,3), dtype=np.uint8)
+    new_image = np.zeros((new_height, new_width,3), dtype=np.uint8)
     x_ratio, y_ratio = width//new_width, height//new_height
     for i in range(new_height):
         for j in range(new_width):

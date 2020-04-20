@@ -14,9 +14,10 @@ from wiki_search import get_wiki
 with open('replies') as f:
     REPLIES = json.load(f)
 
-DEFAULT_CHANNEL = 0
-
-VARS = {}
+DEFAULT_CHANNEL = 0 # for the set_channel command
+ECHOING = [False, 0, ""] # for the echo command - is active, channel SCratch should speak on, last sent message from origin
+ECHO_ORIGIN = 0 # which channel to echo to
+VARS = {} # per-channel local variables
 
 KEYWORDS = [
 [("lord english", "caliborn", "lord of time"), ("He who is already here shall come when this Universe ends.","Nobody can outrun my master.")],
@@ -31,7 +32,8 @@ KEYWORDS = [
 [("8 ball", "8-ball", "cue ball"), ("https://imgur.com/y9XQ0lB", "I have always found the shape of these magic cue balls quite dashing.", "I believe the sphere to be the shape closest to perfection.")],
 [("good night doc", "good night, doc"), ("I do not sleep, but thank you.\nGood night, dear guest.", "Feel free to have a last candy before heading to bed.", "Thank you, but I do not need sleep.\nI shall prepare you a cup of tea before you head to bed.")],
 [("good night",), ("Good night, dear guest.", "Feel free to take a last candy before heading to bed.", "Please, help yourself to a cup of tea going to bed.", "If you want a bedtime story, do not hesitate.\After all, it is what one can expect from their host.", "Good night. Do not forget to look up at the clouds.", "Tired already? You humans have the weakest constitution.","Good night. I shall be glad to tell you more stories tomorrow, when you are refreshed.")],
-[(r"\btick\b",), ("Tock.",)]
+[(r"\btick\b",), ("Tock.",)],
+[(":wiggle:",), ("https://imgur.com/HFQL2jJ",)]
 ]
 
 ## Creating bot
@@ -43,7 +45,7 @@ bot = commands.Bot(command_prefix=prefix)
 
 def generate_story():
     global REPLIES
-    phrases_to_use = random.choices(REPLIES, k = random.randint(50,70))
+    phrases_to_use = random.choices(REPLIES, k = random.randint(50, 70))
     story = [x for phrase in phrases_to_use for x in phrase.split('\n')]
     return story
 
@@ -86,8 +88,16 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+    global ECHOING, ECHO_ORIGIN
     await bot.process_commands(message)
     ctx = await bot.get_context(message)
+    if ECHOING[0]:
+        if ctx.channel==ECHOING[1] and message.content!=ECHOING[2]:
+            await ECHO_ORIGIN.send(f"{message.author}: {message.content}")
+        elif ctx.channel==ECHO_ORIGIN and message.author!=bot.user\
+        and message.content[1:5] not in ("echo", "stop"):
+            ECHOING[2] = message.content
+            await ECHOING[1].send(message.content)
     if message.author != bot.user and not ctx.valid:
         if any(x in message.content.lower() for x in ("thank you", "thanks")) and\
         [x async for x in message.channel.history(limit=2)][1].author == bot.user:
@@ -159,9 +169,25 @@ async def wiki(ctx, *search_terms):
 
 @commands.is_owner()
 @bot.command()
+async def echo(ctx, channel_id:int):
+    '''[Owner] Connects you to a channel.'''
+    global ECHOING, ECHO_ORIGIN
+    ECHOING[:2] = True, bot.get_channel(channel_id)
+    ECHO_ORIGIN = ctx.channel
+
+@commands.is_owner()
+@bot.command()
+async def stop_echo(ctx):
+    '''[Owner] Stops echoing.'''
+    global ECHOING
+    ECHOING[0] = False
+
+
+@commands.is_owner()
+@bot.command()
 async def channels(ctx):
     '''[Owner] Lists all available text channels.'''
-    for channel in bot.get_all_channels():
+    async for channel in bot.get_all_channels():
         if channel.type == channel.type == discord.ChannelType.text:
             await ctx.channel.send(f"{channel.guild.name} - {channel.name} ({channel.id})")
 
