@@ -32,7 +32,7 @@ async def get_canvas():
 
 def get_template_info(url):
     url_dict = parse_qs(url)
-    return {'link':url_dict["https://pxls.space/#template"][0], "width":int(url_dict["tw"][0]), "x":int(url_dict["ox"][0]),"y":int(url_dict["oy"][0])}
+    return {'link':url_dict["template"][0], "width":int(url_dict["tw"][0]), "x":int(url_dict["ox"][0]),"y":int(url_dict["oy"][0])}
 
 
 async def get_difference(canvas, url):
@@ -42,8 +42,8 @@ async def get_difference(canvas, url):
     template_img = np.array(Image.open(BytesIO(r)).convert("RGBA"))
     template_img, num_transparent = resize(template_img, template_info["width"])
     canvas_section = canvas[template_info["y"]:template_info["y"]+template_img.shape[0], template_info["x"]:template_info["x"]+template_img.shape[1]]
-    num_same = np.count_nonzero(np.apply_along_axis(np.all, 2, (canvas_section==template_img)))+num_transparent + 1 #Wtf
-    size = canvas_section.shape[0]*canvas_section.shape[1]
+    num_same = np.count_nonzero(np.apply_along_axis(np.all, 2, (canvas_section==template_img)))
+    size = canvas_section.shape[0]*canvas_section.shape[1]-num_transparent
     return num_same, size
 
 def show(img):
