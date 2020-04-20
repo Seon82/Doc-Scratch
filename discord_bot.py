@@ -105,7 +105,7 @@ async def on_message(message):
 
 @bot.command()
 async def story(ctx):
-    '''I shall be glad to tell you a story. It is the duty of a good host'''
+    '''I shall be glad to tell you a story. It is the duty of a good host.'''
     global VARS
     if ctx.channel.id not in VARS:
         init_vars(ctx.channel.id)
@@ -116,7 +116,7 @@ async def story(ctx):
 
 @bot.command(aliases = ['stfu'])
 async def stop(ctx):
-    '''A useless command'''
+    '''A useless command.'''
     global VARS
     if not VARS[ctx.channel.id]['stop']:
         VARS[ctx.channel.id]['num_stops']+=1
@@ -137,19 +137,20 @@ async def stop(ctx):
     else:
         await ctx.send("I am not saying a thing.")
 
-@bot.command()
+@bot.command(aliases = ['Music'])
 async def music(ctx, *music_name):
-    '''Find an official Homestuck music'''
+    '''Find any canon (or less canon) Homestuck music.
+    Database from https://hsmusic.github.io/'''
     message = await get_music(" ".join(music_name))
     await ctx.channel.send(message)
 
 @bot.command()
 async def progress(ctx, template_url):
-    '''Show the progress on a template'''
+    '''Shows the number and percentage of pixels correctly placed.'''
     message = await get_progress(template_url)
     await ctx.channel.send(message)
 
-@bot.command()
+@bot.command(aliases = ['search'])
 async def wiki(ctx, *search_terms):
     '''Searches the wiki'''
     message = await get_wiki(" ".join(search_terms))
@@ -159,7 +160,7 @@ async def wiki(ctx, *search_terms):
 @commands.is_owner()
 @bot.command()
 async def channels(ctx):
-    '''[Owner] Lists all available text channels'''
+    '''[Owner] Lists all available text channels.'''
     for channel in bot.get_all_channels():
         if channel.type == channel.type == discord.ChannelType.text:
             await ctx.channel.send(f"{channel.guild.name} - {channel.name} ({channel.id})")
@@ -167,7 +168,7 @@ async def channels(ctx):
 @commands.is_owner()
 @bot.command()
 async def say(ctx, msg: str, channel_id:int=0):
-    '''[Owner] Says as message on a given channel'''
+    '''[Owner] Says as message on a given channel.'''
     global DEFAULT_CHANNEL
     if channel_id == 0:
         channel_id = DEFAULT_CHANNEL
@@ -177,7 +178,7 @@ async def say(ctx, msg: str, channel_id:int=0):
 @commands.is_owner()
 @bot.command()
 async def set_channel(ctx, channel_id:int):
-    '''[Owner] Sets default channel for the !say command'''
+    '''[Owner] Sets default channel for the !say command.'''
     global DEFAULT_CHANNEL
     DEFAULT_CHANNEL = channel_id
 
