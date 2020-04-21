@@ -55,7 +55,7 @@ def resize(img, new_width):
     transparent_num = 0
     height, width = img.shape[:2]
     new_height = height*new_width//width
-    new_image = np.zeros((new_height, new_width,3), dtype=np.uint8)
+    new_image = np.full((new_height, new_width,3), 8, dtype=np.uint8)
     x_ratio, y_ratio = width//new_width, height//new_height
     for i in range(new_height):
         for j in range(new_width):

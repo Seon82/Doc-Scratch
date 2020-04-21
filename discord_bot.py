@@ -28,7 +28,7 @@ KEYWORDS = [
 [("lil cal",), ("The poor thing, treated like nothing more than a puppet.", "He is already here.")],
 [(r"\bcal\b",), ("Such familiarity towards my master is quite insulting.", "You shall pay your irreverence with your blood.", "https://imgur.com/ceGQm3g")],
 [("sucker",),("Please refrain from such vulgarity in my home.",)],
-[(r"\bdoc\?",), ("Yes?", "I am listening.", "I am listening.\nI am always listening.", "I already know what you shall say, but by all means, go ahead.")],
+[(r"\bdo+c\?",), ("Yes?", "I am listening.", "I am listening.\nI am always listening.", "I already know what you shall say, but by all means, go ahead.")],
 [("8 ball", "8-ball", "cue ball"), ("https://imgur.com/y9XQ0lB", "I have always found the shape of these magic cue balls quite dashing.", "I believe the sphere to be the shape closest to perfection.")],
 [("good night doc", "good night, doc"), ("I do not sleep, but thank you.\nGood night, dear guest.", "Feel free to have a last candy before heading to bed.", "Thank you, but I do not need sleep.\nI shall prepare you a cup of tea before you head to bed.")],
 [("good night",), ("Good night, dear guest.", "Feel free to take a last candy before heading to bed.", "Please, help yourself to a cup of tea going to bed.", "If you want a bedtime story, do not hesitate.\After all, it is what one can expect from their host.", "Good night. Do not forget to look up at the clouds.", "Tired already? You humans have the weakest constitution.","Good night. I shall be glad to tell you more stories tomorrow, when you are refreshed.")],
@@ -38,7 +38,7 @@ KEYWORDS = [
 
 ## Creating bot
 
-prefix = "!"
+prefix = ":"
 bot = commands.Bot(command_prefix=prefix)
 
 ## Functions
@@ -124,7 +124,7 @@ async def story(ctx):
         VARS[ctx.channel.id]['telling_story'] = True
         await tell_story(ctx.channel)
 
-@bot.command(aliases = ['stfu'])
+@bot.command(aliases = ['stfu', 'cease'])
 async def stop(ctx):
     '''A useless command.'''
     global VARS
@@ -166,6 +166,10 @@ async def wiki(ctx, *search_terms):
     message = await get_wiki(" ".join(search_terms))
     await ctx.channel.send(message)
 
+@bot.command(aliases = ['candy_bowl'])
+async def candy(ctx, *search_terms):
+    '''Leave some for my other guests.'''
+    await ctx.channel.send("Have a candy.")
 
 @commands.is_owner()
 @bot.command()
@@ -187,7 +191,7 @@ async def stop_echo(ctx):
 @bot.command()
 async def channels(ctx):
     '''[Owner] Lists all available text channels.'''
-    async for channel in bot.get_all_channels():
+    for channel in bot.get_all_channels():
         if channel.type == channel.type == discord.ChannelType.text:
             await ctx.channel.send(f"{channel.guild.name} - {channel.name} ({channel.id})")
 
