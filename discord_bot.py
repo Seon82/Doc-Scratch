@@ -23,7 +23,7 @@ KEYWORDS = [
 [("lord english", "caliborn", "lord of time"), ("He who is already here shall come when this Universe ends.","Nobody can outrun my master.")],
 [("time lord", "the doctor"), ("My master is the one and only Lord of Time.",)],
 [("honk",), ("http://tiny.cc/hOnK","hOnK")],
-[("hussie",), ("https://imgur.com/ZMszE75","https://imgur.com/tmGONPE")],
+[("hussie", "andrew", "the huss"), ("https://imgur.com/ZMszE75","https://imgur.com/tmGONPE")],
 [("the mayor",), ("I must admit, even I am quite fond of him.",)],
 [("lil cal",), ("The poor thing, treated like nothing more than a puppet.", "He is already here.")],
 [(r"\bcal\b",), ("Such familiarity towards my master is quite insulting.", "You shall pay your irreverence with your blood.", "https://imgur.com/ceGQm3g")],
@@ -38,7 +38,7 @@ KEYWORDS = [
 
 ## Creating bot
 
-prefix = ":"
+prefix = "!"
 bot = commands.Bot(command_prefix=prefix)
 
 ## Functions
@@ -124,7 +124,7 @@ async def story(ctx):
         VARS[ctx.channel.id]['telling_story'] = True
         await tell_story(ctx.channel)
 
-@bot.command(aliases = ['stfu', 'cease'])
+@bot.command(aliases = ['stfu', 'cease', 'shuturegg'])
 async def stop(ctx):
     '''A useless command.'''
     global VARS
@@ -138,7 +138,7 @@ async def stop(ctx):
             message = random.choice(["As a good host, I shall not let this story be interrupted", "Please shut up and let me do the talking.", "Interrupting in such an untimely fashion is terribly rude.", "Please pay attention, I am still only starting."])
             await ctx.send(message)
         if num_stops==3:
-            message = random.choice(["https://imgur.com/oM4gvOU", "I AM NOT DONE. S U C K E R", "https://imgur.com/tmGONPE"])
+            message = random.choice(["https://imgur.com/oM4gvOU", "I AM NOT DONE. S U C K E R", "https://imgur.com/tmGONPE", "Must I have to take away your breathing privileges?"])
             await ctx.send(message)
         if num_stops==4:
             VARS[ctx.channel.id]['num_stops'] = 0
@@ -166,10 +166,20 @@ async def wiki(ctx, *search_terms):
     message = await get_wiki(" ".join(search_terms))
     await ctx.channel.send(message)
 
-@bot.command(aliases = ['candy_bowl'])
-async def candy(ctx, *search_terms):
+## Hidden commands
+
+@bot.command(aliases = ['candy_bowl'], hidden = True)
+async def candy(ctx):
     '''Leave some for my other guests.'''
-    await ctx.channel.send("Have a candy.")
+    message = random.choice(["https://imgur.com/U5OizNr", "Have a candy."])
+    await ctx.channel.send(message)
+
+@bot.command(hidden = True)
+async def wold(ctx, *search_terms):
+    '''wold'''
+    await ctx.channel.send("wold")
+
+## Owner commands
 
 @commands.is_owner()
 @bot.command()
@@ -205,12 +215,6 @@ async def say(ctx, msg: str, channel_id:int=0):
     await bot.wait_until_ready()
     await bot.get_channel(channel_id).send(msg)
 
-@commands.is_owner()
-@bot.command()
-async def set_channel(ctx, channel_id:int):
-    '''[Owner] Sets default channel for the !say command.'''
-    global DEFAULT_CHANNEL
-    DEFAULT_CHANNEL = channel_id
 
 ## Wrap-up
 
