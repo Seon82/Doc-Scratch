@@ -175,8 +175,7 @@ async def wiki(ctx, *search_terms):
 @bot.command()
 async def info(ctx):
     '''Creator and license info'''
-    message = "Produced by Seon82 under a GNU GPLv3 license.\n
-    Source code can be found at https://github.com/Seon82/Doc-Scratch/"
+    message = "Produced by Seon82 under a GNU GPLv3 license.\nSource code can be found at https://github.com/Seon82/Doc-Scratch/"
     await ctx.channel.send(message)
 
 
