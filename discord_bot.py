@@ -15,7 +15,7 @@ with open('replies') as f:
     REPLIES = json.load(f)
 
 DEFAULT_CHANNEL = 0 # for the set_channel command
-ECHOING = [False, 0, ""] # for the echo command - is active, channel SCratch should speak on, last sent message from origin
+ECHOING = [False, 0, ""] # for the echo command - is active, channel Scratch should speak on, last sent message from origin
 ECHO_ORIGIN = 0 # which channel to echo to
 VARS = {} # per-channel local variables
 
@@ -157,14 +157,28 @@ async def music(ctx, *music_name):
 @bot.command()
 async def progress(ctx, template_url):
     '''Shows the number and percentage of pixels correctly placed.'''
-    message = await get_progress(template_url)
-    await ctx.channel.send(message)
+    if template_url=="":
+        await ctx.channel.send("You need to provide a link to the template.")
+    else:
+        try:
+            message = await get_progress(template_url)
+            await ctx.channel.send(message)
+        except:
+            await ctx.channel.send("I couldn't reach the website, please try again later.")
 
 @bot.command(aliases = ['search'])
 async def wiki(ctx, *search_terms):
     '''Searches the wiki'''
     message = await get_wiki(" ".join(search_terms))
     await ctx.channel.send(message)
+
+@bot.command()
+async def info(ctx):
+    '''Creator and license info'''
+    message = "Produced by Seon82 under a GNU GPLv3 license.\n
+    Source code can be found at https://github.com/Seon82/Doc-Scratch/"
+    await ctx.channel.send(message)
+
 
 ## Hidden commands
 
@@ -218,4 +232,6 @@ async def say(ctx, msg: str, channel_id:int=0):
 
 ## Wrap-up
 
-bot.run("Njk5MjkwMzU0MDU4NTI2Nzgw.XpSUhQ.3G5f_7GzPir0ftVGpLYkCuBipdY")
+with open('token', 'r') as f:
+    token = f.read()
+bot.run(token)
