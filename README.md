@@ -37,7 +37,7 @@ The keywords can be regex expressions, and using the `\b` word boundary is recom
 The paragraphs used to form the story are saved in the `replies` file. The `tweak_replies` file provides some helper functions analyze, find, and replace replies in the stories.
 
 ## License
-Released under a GNU GPLv3 license. See the License.md file for details.
+Released under a GNU GPLv3 license. See the `LICENSE` file for details.
 
 Please do not remove the source information from the `!info` command, but feel free to add a link to your code if you modify it!
 
