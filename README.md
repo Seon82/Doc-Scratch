@@ -4,7 +4,7 @@ On top of (quite) a few easter eggs, provides functions allowing to search the m
 Also tells terribly long stories and is an excellent host.
 
 ## Requirements
-* python>=3.7
+* `python>=3.7`
 * see `requirements.py`
 * the `tweak_replies` helper module also requires `nltk`
 
