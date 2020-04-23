@@ -28,13 +28,13 @@ To add the bot to a channel, select the Oauth2 tab in the right-hand pannel and 
 
 ## Customize
 #### Add reactions to certain keywords
-Change the `KEYWORDS` global variable. 
-It is a list of keywords/reactions couples under the form `[(tuple of keywords), (tuple of reactions)]`. 
-The reactions are chosen at random. Notice that you can add links to show images. 
+The keywords/reactions are stored in the `KEYWORDS` global variable. 
+The data structure used is a list of keywords/reactions couples, which are formatted as `[(tuple of keywords), (tuple of reactions)]`. 
+The reactions are chosen at random are then chosen at random from the reactions tuple. If keywords from different tuples match, the first one only will be considered. Tip: you can add links in the reactions to easily display images. 
 
 The keywords can be regex expressions, and using the `\b` word boundary is recommended to avoid unwarranted spam.
 #### Modify the content of the `!story` command
-The paragraphs used to form the story are saved in the `replies` file. The `tweak_replies` file provides some helper functions analyze, find, and replace replies in the stories.
+The paragraphs used to form the story are saved in the `replies` file. The `tweak_replies` file provides some helper functions to analyze, find, and replace words or sentences in the stories.
 
 ## License
 Released under a GNU GPLv3 license. See the `LICENSE` file for details.
