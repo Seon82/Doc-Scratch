@@ -31,9 +31,15 @@ async def get_canvas():
     img = img.reshape((CANVAS_X,CANVAS_Y,4), order='F')
     return np.transpose(img, (1,0,2))
 
+
 def get_template_info(url):
     url_dict = parse_qs(url)
+    if "template" in url_dict.keys():
+        return {'link':url_dict["template"][0], "width":int(url_dict["tw"][0]), "x":int(url_dict["ox"][0]),"y":int(url_dict["oy"][0])}
     return {'link':url_dict["https://pxls.space/#template"][0], "width":int(url_dict["tw"][0]), "x":int(url_dict["ox"][0]),"y":int(url_dict["oy"][0])}
+
+def clip(img, canvas_shape, x, y, width):
+    ratio = img.shape[1]//width
 
 
 async def get_difference(canvas, url):
