@@ -164,7 +164,7 @@ async def progress(ctx, template_url):
             message = await get_progress(template_url)
             await ctx.channel.send(message)
         except:
-            await ctx.channel.send("I couldn't reach the website, please try again later.")
+            await ctx.channel.send("I couldn't seem to do that, sorry for the inconvenience.")
 
 @bot.command(aliases = ['search'])
 async def wiki(ctx, *search_terms):
@@ -173,10 +173,35 @@ async def wiki(ctx, *search_terms):
     await ctx.channel.send(message)
 
 @bot.command()
+async def ship(ctx, name_1, name_2):
+    '''Tells you if a relationship between two characters could work out.'''
+    preset_reactions = {
+    frozenset({'karkat', 'karkat'}):"A textbook example of kismessitude.",\
+    frozenset({'dave', 'karkat'}):"https://imgur.com/jar9zqc \nThis is all I have to say.",\
+    frozenset({'kanaya', 'rose'}):"Is there any need to answer? See the way they look at each other, it speaks for itself.",\
+    frozenset({'dirk', 'jake'}):"Who wouldn't fall that booty?"
+    }
+    name_1, name_2 = name_1.lower(), name_2.lower()
+    if frozenset((name_1,name_2)) in preset_reactions:
+        message = preset_reactions[frozenset((name_1,name_2))]
+    else:
+        reactions = [
+        "Weird as it may seem from the alpha timeline, they are the perfect moirails.",\
+        "Those two are definitely black romance material.",\
+        f"Did you know {name_1.capitalize()} still has pitch crush on {name_2.capitalize()}?",\
+        "You'd need charms to even begin attempting to describe what's going on between those two.",\
+        "There is nothing going on between them. It seems quite weird to me that you'd even ask.",\
+        "Matesprites. Forever.",\
+        f"{name_1.capitalize()} definitely sees {name_2.capitalize()} as flush material."
+        ]
+        message = random.choice(reactions)
+    await ctx.channel.send(message)
+
+
+@bot.command()
 async def info(ctx):
     '''Creator and license info'''
-    message = "Produced by Seon82 under a GNU GPLv3 license.\n
-    Source code can be found at https://github.com/Seon82/Doc-Scratch/"
+    message = """Produced by Seon82 under a GNU GPLv3 license.\n Source code can be found at https://github.com/Seon82/Doc-Scratch/"""
     await ctx.channel.send(message)
 
 
@@ -192,6 +217,24 @@ async def candy(ctx):
 async def wold(ctx, *search_terms):
     '''wold'''
     await ctx.channel.send("wold")
+
+@bot.command(aliases = ['bap', 'slap'], hidden = True)
+async def broom(ctx):
+    await ctx.channel.send("https://imgur.com/yd3Lnol")
+    await ctx.channel.send("Please stop that.")
+
+@bot.command(hidden = True)
+async def shake(ctx):
+    await ctx.channel.send("https://imgur.com/mvegWpc")
+
+@bot.command(hidden = True)
+async def gun(ctx):
+    await ctx.channel.send("https://imgur.com/HTgxfML")
+    await ctx.channel.send("Then perish.")
+
+@bot.command(aliases = ['dancing', 'dirk'], hidden = True)
+async def dance(ctx):
+    await ctx.channel.send("https://imgur.com/zatBhwh")
 
 ## Owner commands
 
