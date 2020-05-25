@@ -192,7 +192,14 @@ async def ship(ctx, name_1, name_2):
         "You'd need charms to even begin attempting to describe what's going on between those two.",\
         "There is nothing going on between them. It seems quite weird to me that you'd even ask.",\
         "Matesprites. Forever.",\
-        f"{name_1.capitalize()} definitely sees {name_2.capitalize()} as flush material."
+        f"{name_1.capitalize()} definitely sees {name_2.capitalize()} as flush material.",\
+        "They would do pretty well in the ashen quadrant.",\
+        "Those two are in dire need of an auspitice.",\
+        "Beware, those two are in cahoots and what théy're scheming is not reassuring.",\
+        f"{name_1.capitalize()} wishes {name_2.capitalize()} would hate them back.",\
+        f"{name_1.capitalize()} wants to be ashen but {name_2.capitalize()} is looking for a kismessitude, so the situation is pretty tense.",\
+        "They hate each other with all their heart.",\
+        "Very flush and very steamy."
         ]
         message = random.choice(reactions)
     await ctx.channel.send(message)
