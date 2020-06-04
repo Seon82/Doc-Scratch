@@ -89,8 +89,6 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     global ECHOING, ECHO_ORIGIN
-    if message.author.name.startswith("Nanineye");
-        return
     await bot.process_commands(message)
     ctx = await bot.get_context(message)
     if ECHOING[0]:
