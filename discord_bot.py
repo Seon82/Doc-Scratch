@@ -271,14 +271,11 @@ async def channels(ctx):
 
 @commands.is_owner()
 @bot.command()
-async def say(ctx, msg: str, channel_id:int=0):
-    '''[Owner] Says as message on a given channel.'''
-    global DEFAULT_CHANNEL
-    if channel_id == 0:
-        channel_id = DEFAULT_CHANNEL
-    await bot.wait_until_ready()
-    await bot.get_channel(channel_id).send(msg)
-
+async def fetch(ctx, number:int, channel_id:int):
+    channel = bot.get_channel(channel_id)
+    messages = await channel.history(limit=number).flatten()
+    for message in messages[::-1]:
+        await ctx.channel.send(f"{message.author}: {message.content}")
 
 ## Wrap-up
 
