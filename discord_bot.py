@@ -62,8 +62,12 @@ async def tell_story(channel):
                     await asyncio.sleep(1)
                     i+=1
                 message = story.pop(0)
-    message = random.choice(["Fine. You are, after all, my guest.", "I hope I was able to entertain you.", "As a perfect host, I shall oblige."])
+    if VARS[channel.id]['stop']: #forced premature stop
+        message = random.choice(["Fine. You are, after all, my guest.", "I hope I was able to entertain you.", "As a perfect host, I shall oblige."])
+    else:
+        message = random.choice(["I hope you shall be able to deduce the appropriate lessons from my story.", "I hope I was able to entertain you.", "It was a pleasure to find an appreciative audience."])
     await channel.send(message)
+    VARS[channel.id]['telling_story'] = False
 
 
 def get_answer(message):
