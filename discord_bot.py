@@ -105,7 +105,8 @@ async def on_message(message):
     if message.author != bot.user and not ctx.valid:
         if any(x in message.content.lower() for x in ("thank you", "thanks")) and\
         [x async for x in message.channel.history(limit=2)][1].author == bot.user:
-            await message.channel.send("You are most welcome.")
+            message_tnx = ["https://imgur.com/0CoRm1k", "You are most welcome."]
+            await message.channel.send(random.choice(message_tnx))
         else:
             answer = get_answer(message)
             if answer:
