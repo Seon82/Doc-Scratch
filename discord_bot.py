@@ -20,11 +20,11 @@ ECHO_ORIGIN = 0 # which channel to echo to
 VARS = {} # per-channel local variables
 
 KEYWORDS = [
-[("lord english", "caliborn", "lord of time"), ("He who is already here shall come when this Universe ends.","Nobody can outrun my master.")],
+[("lord english", "caliborn", "lord of time", "l0rd of time", "l*rd of time"), ("He who is already here shall come when this Universe ends.","Nobody can outrun my master.")],
 [("time lord", "the doctor"), ("My master is the one and only Lord of Time.",)],
 [("time l0rd", "time l*rd"), ("How dare you try to censor my master's name?",)],
 [(r"\bhonk\b",), ("http://tiny.cc/hOnK","hOnK")],
-[("hussie", "andrew", "the huss"), ("https://imgur.com/ZMszE75","https://imgur.com/tmGONPE")],
+[("hussie", "h*ssie", "andrew", "the huss"), ("https://imgur.com/ZMszE75","https://imgur.com/tmGONPE")],
 [("the mayor",), ("I must admit, even I am quite fond of him.",)],
 [("lil cal",), ("The poor thing, treated like nothing more than a puppet.", "He is already here.")],
 [(r"\bcal\b",), ("Such familiarity towards my master is quite insulting.", "You shall pay your irreverence with your blood.", "https://imgur.com/ceGQm3g")],
