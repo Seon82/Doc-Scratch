@@ -6,6 +6,7 @@ import json
 import re
 import os
 import time
+from datetime import timedelta, datetime
 from music_loader import get_music
 from pxls_image import get_progress
 from wiki_search import get_wiki
@@ -281,7 +282,8 @@ async def fetch(ctx, number:int, channel_id:int):
     channel = bot.get_channel(channel_id)
     messages = await channel.history(limit=number).flatten()
     for message in messages[::-1]:
-        await ctx.channel.send(f"{str(message.created_at.time())[0:5]}: {message.author.split('#')[0]}: {message.content}")
+        time_cest = '{:%H:%M}'.format(message.created_at + timedelta(hours=2))
+        await ctx.channel.send(f"({time_cest}) {str(message.author).split('#')[0]}: {message.content}")
 
 ## Wrap-up
 
