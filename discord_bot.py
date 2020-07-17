@@ -281,7 +281,7 @@ async def fetch(ctx, number:int, channel_id:int):
     channel = bot.get_channel(channel_id)
     messages = await channel.history(limit=number).flatten()
     for message in messages[::-1]:
-        await ctx.channel.send(f"{message.created_at.hours}h{message.created_at.minutes}: {message.author.split('#')[0]}: {message.content}")
+        await ctx.channel.send(f"{str(message.created_at.time())[0:5]}: {message.author.split('#')[0]}: {message.content}")
 
 ## Wrap-up
 
