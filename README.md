@@ -1,3 +1,6 @@
+![Doc being a good host](images/interactions.png "Doc being a good host")
+
+
 # Doc-Scratch
 A python discord bot meant to emulate Doc Scratch from Homestuck.
 On top of (quite) a few easter eggs, provides functions allowing to search the mspa wiki, find homestuck musics, and check the progress of a template on pxls.space.
@@ -35,6 +38,9 @@ The reactions are chosen at random are then chosen at random from the reactions 
 The keywords can be regex expressions, and using the `\b` word boundary is recommended to avoid unwarranted spam.
 #### Modify the content of the `!story` command
 The paragraphs used to form the story are saved in the `replies` file. The `tweak_replies` file provides some helper functions to analyze, find, and replace words or sentences in the stories.
+
+![Enlightening stories](images/story.png "Enlightening stories")
+
 
 ## License
 Released under a GNU GPLv3 license. See the `LICENSE` file for details.
