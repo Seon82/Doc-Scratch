@@ -1,5 +1,6 @@
 from fuzzywuzzy import process
 import json
+import random
 
 with open("music.json","r") as f:
     MUSICS, FLASHES, ALIASES = json.load(f)

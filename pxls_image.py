@@ -8,8 +8,8 @@ from urllib.parse import parse_qs
 import json
 import cv2
 
-CANVAS = [None, None, None] # rgba image, time, alpha layer
-CANVAS_X, CANVAS_Y = 1500, 1488
+CANVAS = (None, None)
+CANVAS_X, CANVAS_Y = 1500, 2600
 COLORS = [(255, 255, 255, 255), (205, 205, 205, 255), (136, 136, 136, 255), (85, 85, 85, 255), (34, 34, 34, 255), (0, 0, 0, 255), (255, 167, 209, 255), (253, 70, 89, 255), (229, 0, 0, 255), (128, 0, 0, 255), (255, 221, 202, 255), (246, 179, 137, 255), (229, 149, 0, 255), (255, 91, 0, 255), (160, 106, 66, 255), (96, 64, 40, 255), (255, 255, 0, 255), (253, 253, 150, 255), (148, 224, 68, 255), (2, 190, 1, 255), (0, 95, 0, 255), (0, 211, 221, 255), (0, 131, 199, 255), (0, 0, 234, 255), (3, 7, 100, 255), (207, 110, 228, 255), (255, 0, 255, 255), (130, 0, 128, 255)]
 
 async def get_webpage(url):
@@ -32,11 +32,15 @@ async def get_canvas():
     img = np.transpose(img, (1,0,2))
     return img
 
+
 def get_template_info(url):
     url_dict = parse_qs(url)
     if "template" in url_dict.keys():
         return {'link':url_dict["template"][0], "width":int(url_dict["tw"][0]), "x":int(url_dict["ox"][0]),"y":int(url_dict["oy"][0])}
     return {'link':url_dict["https://pxls.space/#template"][0], "width":int(url_dict["tw"][0]), "x":int(url_dict["ox"][0]),"y":int(url_dict["oy"][0])}
+
+def clip(img, canvas_shape, x, y, width):
+    ratio = img.shape[1]//width
 
 def clip(img, canvas_shape, x, y, width):
     ratio = img.shape[1]//width

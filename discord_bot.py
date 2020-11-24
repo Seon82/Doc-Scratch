@@ -6,6 +6,7 @@ import json
 import re
 import os
 import time
+from datetime import timedelta, datetime
 from music_loader import get_music
 from pxls_image import get_progress
 from wiki_search import get_wiki
@@ -20,10 +21,11 @@ ECHO_ORIGIN = 0 # which channel to echo to
 VARS = {} # per-channel local variables
 
 KEYWORDS = [
-[("lord english", "caliborn", "lord of time"), ("He who is already here shall come when this Universe ends.","Nobody can outrun my master.")],
+[("lord english", "caliborn", "lord of time", "l0rd of time", "l*rd of time"), ("He who is already here shall come when this Universe ends.","Nobody can outrun my master.")],
 [("time lord", "the doctor"), ("My master is the one and only Lord of Time.",)],
-[("honk",), ("http://tiny.cc/hOnK","hOnK")],
-[("hussie", "andrew", "the huss"), ("https://imgur.com/ZMszE75","https://imgur.com/tmGONPE")],
+[("time l0rd", "time l\*rd"), ("How dare you try to censor my master's name?",)],
+[(r"\bhonk\b",), ("http://tiny.cc/hOnK","hOnK")],
+[("hussie", "h\*ssie", "andrew", "the huss"), ("https://imgur.com/ZMszE75","https://imgur.com/tmGONPE")],
 [("the mayor",), ("I must admit, even I am quite fond of him.",)],
 [("lil cal",), ("The poor thing, treated like nothing more than a puppet.", "He is already here.")],
 [(r"\bcal\b",), ("Such familiarity towards my master is quite insulting.", "You shall pay your irreverence with your blood.", "https://imgur.com/ceGQm3g")],
@@ -31,7 +33,7 @@ KEYWORDS = [
 [(r"\bdo+c\?",), ("Yes?", "I am listening.", "I am listening.\nI am always listening.", "I already know what you shall say, but by all means, go ahead.")],
 [("8 ball", "8-ball", "cue ball"), ("https://imgur.com/y9XQ0lB", "I have always found the shape of these magic cue balls quite dashing.", "I believe the sphere to be the shape closest to perfection.")],
 [("good night doc", "good night, doc"), ("I do not sleep, but thank you.\nGood night, dear guest.", "Feel free to have a last candy before heading to bed.", "Thank you, but I do not need sleep.\nI shall prepare you a cup of tea before you head to bed.")],
-[("good night",), ("Good night, dear guest.", "Feel free to take a last candy before heading to bed.", "Please, help yourself to a cup of tea going to bed.", "If you want a bedtime story, do not hesitate.\After all, it is what one can expect from their host.", "Good night. Do not forget to look up at the clouds.", "Tired already? You humans have the weakest constitution.","Good night. I shall be glad to tell you more stories tomorrow, when you are refreshed.")],
+[("good night",), ("Good night, dear guest.", "Feel free to take a last candy before heading to bed.", "Please, help yourself to a cup of tea going to bed.", "If you want a bedtime story, do not hesitate.\nAfter all, it is what one can expect from their host.", "Good night. Do not forget to look up at the clouds.", "Tired already? You humans have the weakest constitution.","Good night. I shall be glad to tell you more stories tomorrow, when you are refreshed.")],
 [(r"\btick\b",), ("Tock.",)],
 [(":wiggle:",), ("https://imgur.com/HFQL2jJ",)]
 ]
@@ -62,8 +64,12 @@ async def tell_story(channel):
                     await asyncio.sleep(1)
                     i+=1
                 message = story.pop(0)
-    message = random.choice(["Fine. You are, after all, my guest.", "I hope I was able to entertain you.", "As a perfect host, I shall oblige."])
+    if VARS[channel.id]['stop']: #forced premature stop
+        message = random.choice(["Fine. You are, after all, my guest.", "I hope I was able to entertain you.", "As a perfect host, I shall oblige."])
+    else:
+        message = random.choice(["I hope you shall be able to deduce the appropriate lessons from my story.", "I hope I was able to entertain you.", "It was a pleasure to find an appreciative audience."])
     await channel.send(message)
+    VARS[channel.id]['telling_story'] = False
 
 
 def get_answer(message):
@@ -101,7 +107,8 @@ async def on_message(message):
     if message.author != bot.user and not ctx.valid:
         if any(x in message.content.lower() for x in ("thank you", "thanks")) and\
         [x async for x in message.channel.history(limit=2)][1].author == bot.user:
-            await message.channel.send("You are most welcome.")
+            message_tnx = ["https://imgur.com/0CoRm1k", "You are most welcome."]
+            await message.channel.send(random.choice(message_tnx))
         else:
             answer = get_answer(message)
             if answer:
@@ -160,10 +167,11 @@ async def progress(ctx, template_url):
     if template_url=="":
         await ctx.channel.send("You need to provide a link to the template.")
     else:
-        message = await get_progress(template_url)
-        await ctx.channel.send(message)
-
-            # await ctx.channel.send("I couldn't reach the website, please try again later.")
+        try:
+            message = await get_progress(template_url)
+            await ctx.channel.send(message)
+        except:
+            await ctx.channel.send("I couldn't seem to do that, sorry for the inconvenience.")
 
 @bot.command(aliases = ['search'])
 async def wiki(ctx, *search_terms):
@@ -172,9 +180,42 @@ async def wiki(ctx, *search_terms):
     await ctx.channel.send(message)
 
 @bot.command()
+async def ship(ctx, name_1, name_2):
+    '''Tells you if a relationship between two characters could work out.'''
+    preset_reactions = {
+    frozenset({'karkat', 'karkat'}):"A textbook example of kismessitude.",\
+    frozenset({'dave', 'karkat'}):"https://imgur.com/jar9zqc \nThis is all I have to say.",\
+    frozenset({'kanaya', 'rose'}):"Is there any need to answer? See the way they look at each other, it speaks for itself.",\
+    frozenset({'dirk', 'jake'}):"Who wouldn't fall that booty?"
+    }
+    name_1, name_2 = name_1.lower(), name_2.lower()
+    if frozenset((name_1,name_2)) in preset_reactions:
+        message = preset_reactions[frozenset((name_1,name_2))]
+    else:
+        reactions = [
+        "Weird as it may seem from the alpha timeline, they are the perfect moirails.",\
+        "Those two are definitely black romance material.",\
+        f"Did you know {name_1.capitalize()} still has pitch crush on {name_2.capitalize()}?",\
+        "You'd need charms to even begin attempting to describe what's going on between those two.",\
+        "There is nothing going on between them. It seems quite weird to me that you'd even ask.",\
+        "Matesprites. Forever.",\
+        f"{name_1.capitalize()} definitely sees {name_2.capitalize()} as flush material.",\
+        "They would do pretty well in the ashen quadrant.",\
+        "Those two are in dire need of an auspitice.",\
+        "Beware, those two are in cahoots and what théy're scheming is not reassuring.",\
+        f"{name_1.capitalize()} wishes {name_2.capitalize()} would hate them back.",\
+        f"{name_1.capitalize()} wants to be ashen but {name_2.capitalize()} is looking for a kismessitude, so the situation is pretty tense.",\
+        "They hate each other with all their heart.",\
+        "Very flush and very steamy."
+        ]
+        message = random.choice(reactions)
+    await ctx.channel.send(message)
+
+
+@bot.command()
 async def info(ctx):
     '''Creator and license info'''
-    message = "Produced by Seon82 under a GNU GPLv3 license.\nSource code can be found at https://github.com/Seon82/Doc-Scratch/"
+    message = """Produced by Seon82 under a GNU GPLv3 license.\n Source code can be found at https://github.com/Seon82/Doc-Scratch/"""
     await ctx.channel.send(message)
 
 
@@ -190,6 +231,24 @@ async def candy(ctx):
 async def wold(ctx, *search_terms):
     '''wold'''
     await ctx.channel.send("wold")
+
+@bot.command(aliases = ['bap', 'slap'], hidden = True)
+async def broom(ctx):
+    await ctx.channel.send("https://imgur.com/yd3Lnol")
+    await ctx.channel.send("Please stop that.")
+
+@bot.command(hidden = True)
+async def shake(ctx):
+    await ctx.channel.send("https://imgur.com/mvegWpc")
+
+@bot.command(hidden = True)
+async def gun(ctx):
+    await ctx.channel.send("https://imgur.com/HTgxfML")
+    await ctx.channel.send("Then perish.")
+
+@bot.command(aliases = ['dancing', 'dirk'], hidden = True)
+async def dance(ctx):
+    await ctx.channel.send("https://imgur.com/zatBhwh")
 
 ## Owner commands
 
@@ -219,14 +278,12 @@ async def channels(ctx):
 
 @commands.is_owner()
 @bot.command()
-async def say(ctx, msg: str, channel_id:int=0):
-    '''[Owner] Says as message on a given channel.'''
-    global DEFAULT_CHANNEL
-    if channel_id == 0:
-        channel_id = DEFAULT_CHANNEL
-    await bot.wait_until_ready()
-    await bot.get_channel(channel_id).send(msg)
-
+async def fetch(ctx, number:int, channel_id:int):
+    channel = bot.get_channel(channel_id)
+    messages = await channel.history(limit=number).flatten()
+    for message in messages[::-1]:
+        time_cest = '{:%H:%M}'.format(message.created_at + timedelta(hours=2))
+        await ctx.channel.send(f"({time_cest}) {str(message.author).split('#')[0]}: {message.content}")
 
 ## Wrap-up
 
