@@ -1,12 +1,12 @@
 import aiohttp
-from google import google
+from googlesearch import search
 from bs4 import BeautifulSoup
 from rank_bm25 import BM25Okapi
 
 async def get_wiki_link(query):
-    search_results = google.search(query+" site:https://mspaintadventures.fandom.com")
+    search_results = list(search(query+" site:https://mspaintadventures.fandom.com", stop=1))
     if search_results!=[]:
-        return search_results[0].link
+        return search_results[0]
     return None
 
 async def get_best_paragraph(query, paragraphs):
